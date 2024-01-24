@@ -1,0 +1,1 @@
+{"name":"Local: Berserk_Monsters","url":"d:\\cf_contests\\dsu_models\\Berserk_Monsters.cpp","tests":[{"id":1706109380582,"input":"3\n5\n3 4 7 5 10\n4 9 1 18 1\n2\n2 1\n1 3\n4\n1 1 2 4\n3 3 4 2","output":"3 1 0 0 0 \n0 0 \n1 1 1 0"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\dsu_models\\Berserk_Monsters.cpp","group":"local","local":true}
