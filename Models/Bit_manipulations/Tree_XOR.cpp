@@ -18,23 +18,16 @@ using namespace chrono;
 typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
-#define mod_10 1000000007
-#define mod_9 998244353
+#define MOD 1000000007
+#define MOD1 998244353
 #define lmt 1000000000000000000
 #define __builtin_popcount(x) count_ones(x)
 #define endl() cout<<endl
-#define Yes() cout<<"YES\n"
-#define No() cout<<"NO\n"
 #define readtwo(x,y) ll x,y; cin >> x >> y
 #define readl(x) ll x;cin >> x
 #define readstring(s) string s;cin >> s
 #define readarray(a, n) ll a[n];for (int i = 0; i < n; i++)cin >> a[i]
 #define readvector(a, n) vector<ll> a(n);for (ll i = 0; i < n; i++)cin >> a[i]
-#define readgraph(g, m) vector<ll> g[m];for (ll i = 0; i < m; i++){ll x, y;cin >> x >> y;g[x].pb(y);g[y].pb(x);}
-#define readgraphw(g, m) vector<pair<ll,ll>> g[m];for (ll i = 0; i < m; i++){ll x, y, w;cin >> x >> y >> w;g[x].pb({y,w});g[y].pb({x,w});}
-#define readgraphw2(g, m) vector<pair<ll,ll>> g[m];for (ll i = 0; i < m; i++){ll x, y, w;cin >> x >> y >> w;g[x].pb({y,w});}
-#define readgraph2(g, m) vector<ll> g[m];for (ll i = 0; i < m; i++){ll x, y;cin >> x >> y;g[x].pb(y);}
-
 // greater<int>(decreasing order) or less<int> (increasing order)
 typedef tree< pair<int,int>, null_type, less<pair<int,int>>, rb_tree_tag, tree_order_statistics_node_update>
 ordered_set;
@@ -86,10 +79,10 @@ ll binpow(ll a, ll b, ll m = 1e18) {
 ll fact(ll n){
     if(n<=1)
         return 1;
-    return ((n%mod_10)*(fact(n-1)%mod_10))%mod_10;
+    return ((n%MOD1)*(fact(n-1)%MOD1))%MOD1;
 }
 
-ll inv(ll a){ return binpow(a,mod_10-2,mod_10); }
+ll inv(ll a){ return binpow(a,MOD-2,MOD); }
  
 ll ncr(ll n, ll r){
     if(r==0){
@@ -99,30 +92,11 @@ ll ncr(ll n, ll r){
         return 0;
     }
     ll ans = 1;
-    ans = (ans*fact(n))%mod_10;
-    ans = (ans*inv(fact(r)))%mod_10;
-    ans = (ans*inv(fact(n - r)))%mod_10;
-    return ans%mod_10;
+    ans = (ans*fact(n))%MOD;
+    ans = (ans*inv(fact(r)))%MOD;
+    ans = (ans*inv(fact(n - r)))%MOD;
+    return ans%MOD;
 } 
-
-void add_m(ll &a, ll b, ll m) {
-    a += b;
-    if (a >= m)
-        a -= m;
-}
-
-ll sum_m(ll a, ll b, ll m) {
-    a += b;
-    if (a >= m)
-        a -= m;
-    if (a < 0)
-        a += m;
-    return a;
-}
-
-ll mul_m(ll a, ll b, ll m) {
-    return (a * 1LL * b) % m;
-}
 
 // strings
 vector<ll> z_function(string s) { 
@@ -160,33 +134,26 @@ vector<ll> prefix_function(string s) {
 }
 
 class Graph{
- 
     public:
-        ll n,ans=1,fx[100001], siz[100001];
-        map<ll, vector<ll>> comp;
+        ll n,ans=0, parent;
         vector<vector<ll>> adj;
-        vector<ll> cycle_lengths;
-        vector<ll> vis;
-        vector<ll> color;
+        vector<ll> ans_arr, len, node_weight;
         Graph(ll n){
             this->n=n;
             adj.resize(n + 1);
-            vis.resize(n+1);
-            vis.assign(n+1,0);
-            color.resize(n+1,0);
-            for(int i=1; i<=n; i++){
-                fx[i]=i;            // dsu
-                siz[i]=1;
-                comp[i].pb(i);
-            }
+            node_weight.resize(n+1);
+            node_weight.assign(n+1,0);
+            ans_arr.resize(n);
+            ans_arr.assign(n,0);
+            len.resize(n+1);
+            len.assign(n+1,0);
         }
-        void add_directed_edge(ll u, ll v){
- 
+        void add_undirected_edge(ll u, ll v){
             adj[u].push_back(v);
+            adj[v].push_back(u);
         }
  
         void print_adjlist(){
- 
             for(auto it: adj){
                 for(auto it1: it){
                     cout<<it1<<" ";
@@ -194,77 +161,89 @@ class Graph{
                 cout<<endl;
             }
         }
- 
-        void find_cycle_lengths(){
-            for(int i=1; i<=n; i++){
-                if(vis[i])
-                    continue;      
-                ll length=0;
-                dfs(i,length);
+        void Algorithm_Tree_Xor(){
+            for(auto it: adj[1]){  
+                dfs(it, 1, 0, 0);
+                len[1]+=len[it];
             }
-        }
- 
-        ll dsu(ll n){      //dsu
-            
-            if(fx[n]==n) return n;
- 
-            return dsu(fx[n]);
-        }
- 
-        void dsu_update(ll x, ll y){
- 
-            if(siz[fx[x]]> siz[fx[y]]){    
-                siz[fx[x]]+=siz[fx[y]];
-                siz[fx[y]]=0;
-                for(auto it: comp[fx[y]]){
-                    fx[it]=fx[x];    
-                    comp[fx[x]].pb(it);
-                }
-                comp.erase(y);
+            len[1]++;
+            ans_arr[0]=ans;
+            for(auto it: adj[1]){
+                dfs2(it, 1);
             }
-            else{
-                siz[fx[y]]+=siz[fx[x]];
-                for(auto it: comp[fx[x]]){
-                    fx[it]=fx[y];
-                    comp[fx[y]].pb(it);
-                }
-                comp.erase(x);
-            }
+            // dfs for 1 as root vertex
         }
-        void find_cycle_directed_graph(){
-            for(int i=1; i<=n; i++){
-                if(color[i]==0){
-                    if(dfs(i, -1, adj, color)){
-                        cout<<"Cycle found\n";
-                        return;
-                    }
-                }
+        void print_ans(){
+            for(auto it: ans_arr){
+                cout<<it<<" ";
             }
-            cout<<"No cycle found\n";
+            endl();
         }
- 
+         void print_len(){
+            for(auto it: len){
+                cout<<it<<" ";
+            }
+            endl();
+        }
     private:
-        void dfs(ll node, ll &length){
-            
-            if(vis[node]) return;
-            vis[node]=1;
-            length++;     
+        void dfs(ll node, ll parent, ll curr, ll k){
+            ans+= k + (curr^node_weight[0]^node_weight[node-1]);
+            k= ans;
             for(auto it: adj[node]){
-                dfs(it, length);
+                if(it!=parent)
+                    dfs(it, node, curr^node_weight[node-1]^node_weight[0], k), len[node]+=len[it];;
             }
+            len[node]++;
         }
-        bool dfs(int v, int p, vector<ll> g[], vector<ll> &color){
-            color[v] = 1; // GREY
-            bool ans=false;
-            for(int w : g[v]){
-                if(color[w] == 1){
-                    return true;
-                // you found a cycle, it's easy to recover it now.
+
+        void dfs2(ll node, ll parent){
+            ll k = (node_weight[parent-1]^node_weight[node-1]);
+            //cout<<k<<" "<<node<<endl;
+            ans_arr[node-1]= ans_arr[parent-1]+(len[parent] - len[node] - 1 )*k - (len[node]-1)*k;
+            len[node]+= (len[parent]-len[node]);
+            for(auto it: adj[node]){
+                if(it != parent){
+                    dfs2(it, node);
                 }
-                if(color[w] == 0) ans = dfs(w, v, g, color);
-                if(ans) return true;
             }
-            color[v] = 2; // BLACK
-            return ans;
         }
 };
+
+void solve(){
+
+    ll n;
+    in(n);
+    Graph g(n);
+    rep(i,0,n,1){
+        ll t;
+        cin>>t;
+        g.node_weight[i]=t;
+    }
+    
+    ll ans=0;
+    ll sz= n;
+    for(int i=0; i<sz-1; i++){
+        ll u,v;
+        cin>>u>>v;
+        g.add_undirected_edge(u,v);
+    }
+    // g.print_adjlist();
+    g.Algorithm_Tree_Xor();
+    // cout<<g.ans<<endl;
+    g.print_ans();
+}
+
+int main() {
+    auto begin = std::chrono::high_resolution_clock::now();
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int t = 1;
+    cin>>t;
+    
+    while(t--){
+        solve();
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    cerr << "Time measured: " << elapsed.count() * 1e-9 << " seconds.\n"; 
+}
