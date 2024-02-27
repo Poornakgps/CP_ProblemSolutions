@@ -61,6 +61,21 @@ void get_factors(vector<ll> &v, ll n){
         }   
     }
 }
+void primeFactors(ll n) { 
+    map<ll,ll> mp;
+    while (n % 2 == 0) { 
+        mp[2]++;
+        n = n/2; 
+    } 
+    for (ll i = 3; i <= sqrt(n); i = i + 2) { 
+        while (n % i == 0) { 
+            mp[i]++;
+            n = n/i; 
+        } 
+    } 
+    if (n > 2) 
+        mp[n]++;
+}
 
 bool is_prime(ll n){            
     for(int i=2; i*i<=n; i++){
