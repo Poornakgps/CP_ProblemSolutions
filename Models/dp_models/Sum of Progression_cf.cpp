@@ -1,4 +1,4 @@
-#include "../template.h"
+#include "../../template.h"
 
 ll pre[322][200005], ipre[320][200005];
 
