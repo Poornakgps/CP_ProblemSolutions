@@ -1,0 +1,1 @@
+{"name":"Local: suffix_array","url":"d:\\cf_contests\\Models\\Strings\\suffix_array.cpp","tests":[{"id":1711445863434,"input":"aba","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Models\\Strings\\suffix_array.cpp","group":"local","local":true}

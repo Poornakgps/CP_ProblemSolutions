@@ -1,0 +1,1 @@
+{"name":"Local: Aho-Corasick algorithm","url":"d:\\cf_contests\\Models\\Strings\\Aho-Corasick algorithm.cpp","tests":[{"id":1711457762156,"input":"4\naaab\naa\nabaabb\nchandu","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Models\\Strings\\Aho-Corasick algorithm.cpp","group":"local","local":true}

@@ -1,0 +1,1 @@
+{"name":"Local: trie","url":"d:\\cf_contests\\Models\\Strings\\trie.cpp","tests":[{"id":1711457908890,"input":"2\naab\nabab\nccdfsaf\nchandu","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Models\\Strings\\trie.cpp","group":"local","local":true}
