@@ -48,6 +48,8 @@ void debug_int(int i){ cout<<i<<" "; }
 
 void debug_str(string s){ cout<<s<<" "; }
 
+
+/*******************************NUMBER THEORY****************************************/
 ll gcd(ll a, ll b){ if(b==0) return a; else return gcd(b,a%b); }  // gcd
  
 ll lcm(ll a, ll b){ return (a*b)/(gcd(a,b)); }   // lcm
@@ -97,6 +99,10 @@ ll binpow(ll a, ll b, ll m = 1e18) {
     }
     return res;
 }
+
+/*******************************NUMBER THEORY****************************************/
+
+/*******************************COMBINATORICS****************************************/
  
 ll fact(ll n){
     if(n<=1)
@@ -119,6 +125,7 @@ ll ncr(ll n, ll r){
     ans = (ans*inv(fact(n - r)))%mod_10;
     return ans%mod_10;
 } 
+/*******************************COMBINATORICS****************************************/
 
 void add_m(ll &a, ll b, ll m) {
     a += b;
@@ -138,6 +145,8 @@ ll sum_m(ll a, ll b, ll m) {
 ll mul_m(ll a, ll b, ll m) {
     return (a * 1LL * b) % m;
 }
+
+/*******************************STRINGS****************************************/
 
 // strings
 vector<ll> z_function(string s) { 
@@ -173,7 +182,22 @@ vector<ll> prefix_function(string s) {
     }
     return pi;
 }
+/*******************************STRINGS****************************************/
 
+/*******************************BITMANIPULATION****************************************/
+
+int countSetBits(int n)
+{
+    int count = 0;
+    while (n)
+    {
+        n = n & (n - 1);
+        count++;
+    }
+    return count;
+}
+
+/*******************************GRAPH****************************************/
 class Graph{
  
     public:
@@ -283,3 +307,185 @@ class Graph{
             return ans;
         }
 };
+/*******************************GRAPH****************************************/
+
+/******************************* STL ****************************************/
+
+void vector__(){
+
+    // reverse iteration
+    vector<int> v = {34, 23, 43, 67, 444, 42, 53};
+    for(auto it = v.rbegin(); it!=v.rend(); it++){
+        cout<<*it<<" ";
+    }
+    cout<<endl;
+
+    // back
+    cout<<v.back()<<endl;
+
+    // clear
+    v.clear();
+
+    // data
+    vector<ll> v(10);
+
+    ll *p = v.data();
+
+    ll k = 1;
+    for(int i=0;i<10;i++){
+        v[i] = k;
+        k++;
+    }
+
+    for(int i=0;i<10;i++){
+
+        for(int j=0; j<10-i; j++){
+            
+            cout<<p[j]<<" ";
+        }
+        endl();
+        p++;
+    }
+
+    // erase
+    // erase the 6th element
+    v.erase (v.begin()+5);
+
+    // erase the first 3 elements:
+    v.erase (v.begin(),v.begin()+3);
+}
+
+void multiset__(){
+    // remove all elements up to element
+    // with value 30 in gquiz2
+    cout << "\ngquiz2 after removal \n"
+            "of elements less than 30 : \n";
+    gquiz2.erase(gquiz2.begin(), gquiz2.find(30));
+    for (itr = gquiz2.begin(); itr != gquiz2.end(); ++itr) {
+        cout << *itr << " ";
+    }
+
+        // remove all elements with value 50 in gquiz2
+    
+    gquiz2.erase(50);
+
+   // it will remove only one value of
+    // 10 from multiset
+    a.erase(a.find(10));
+ 
+    // it will give output 2
+    cout << a.count(10) << endl;
+}
+
+void strings__(){
+      string str = "geeksforgeeks a computer science";
+  char c = 'g';
+ 
+  // Find first occurrence of 'g'
+  size_t found = str.find(c);
+  if (found != string::npos)
+    cout << "First occurrence is " << 
+             found << endl;
+   
+  // Find next occurrence of 'g'
+  found = str.find(c, found + 1);
+  if (found != string::npos)
+    cout << "Next occurrence is " << 
+             found << endl;
+
+  string str = "geeksforgeeks a computer science";
+   
+  // Only search first 5 characters 
+  // of "geeks.practice"
+  size_t found = str.find("geeks.practice", 
+                          0, 5);
+  if (found != string::npos)
+    cout << found << endl;
+
+    char src[] = "geeksforgeeks"; 
+ 
+    // Here destination is not large 
+    // enough to store the src. so the 
+    // behaviour of strcpy is unspecified. 
+    // program may crashed, but its 
+    // printing geeksforgeeks 
+    char dest[2]; 
+     
+    // copying src into dest. 
+    strcpy(dest, src); 
+    cout << "Copied string: " << dest << endl; 
+
+
+    // Using positions 
+    cout << "Using positions:"
+         << "\n"; 
+    // Replaces 7 characters from 0th index by s2 
+    s1.replace(0, 7, s2); 
+    cout << s1 << endl; 
+  
+    // Replaces 3 characters from 0th index with "Hello" 
+    s4.replace(0, 3, "Hello "); 
+    cout << s4 << endl; 
+  
+    // Replaces 5 characters from 6th index of s4 with 
+    // 5 characters from 0th of s3 
+    s4.replace(6, 5, s3, 0, 5); 
+    cout << s4 << endl; 
+  
+    // Replaces 5 characters from 6th index of s4 with 
+    // 6 characters from string "to all" 
+    s4.replace(6, 5, "to all", 6); 
+    cout << s4 << endl; 
+  
+    // Replaces 1 character from 12th  index of s4 with 
+    // 3 copies of '!' 
+    s4.replace(12, 1, 3, '!'); 
+    cout << s4 << endl; 
+  
+    // Using iterators 
+    cout << "\nUsing iterators:"
+         << "\n"; 
+    // Replaces whole s2 string with s3 
+    s2.replace(s2.begin(), s2.end(), s3); 
+    cout << s2 << "\n"; 
+  
+    // Replaces 13 characters from begin of s1 with string 
+    // "Example" 
+    s1.replace(s1.begin(), s1.begin() + 13, "Example"); 
+    cout << s1 << "\n"; 
+  
+    // Replace last 7 characters of s4 with first 12 
+    // characters of the string "geeks from- here" 
+    s4.replace(s4.end() - 7, s4.end(), "geeks from- here", 
+               12); 
+    cout << s4 << "\n"; 
+  
+    // Replaces last character with complete s2 string from 
+    // s2.begin() till s2.end() 
+    s4.replace(s4.end() - 1, s4.end(), s2.begin(), 
+               s2.end()); 
+    cout << s4 << "\n"; 
+  
+    // Replaces portion of string s4 starting from 5 
+    // characters from s4.begin() to 15 characters from 
+    // s4.begin() with 2 occurrences of ',' 
+    s4.replace(s4.begin() + 5, s4.begin() + 15, 2, ','); 
+
+   // Declaring integer
+    int i_val = 20;
+ 
+    // Declaring float
+    float f_val = 30.50;
+ 
+    // Conversion of int into string using
+    // to_string()
+    string stri = to_string(i_val);
+ 
+    // Conversion of float into string using
+    // to_string()
+    string strf = to_string(f_val);
+
+    // type of explicit type casting
+  int myint1 = stoi(str1);
+}
+/******************************* STL ****************************************/

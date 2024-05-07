@@ -43,7 +43,7 @@ tree_order_statistics_node_update, which, in fact, carries the necessary operati
 typedef tree<
 int,
 null_type,
-greater<int>,   // greater<int>(decreasing order) or less<int> (increasing order) 
+less<int>,   // greater<int>(decreasing order) or less<int> (increasing order) 
                 // using less_equat<int> makes multiset
 rb_tree_tag,
 tree_order_statistics_node_update>
@@ -81,7 +81,8 @@ int main(){
 
     cout<<endl;
 
-    cout<<"order_of_key returns number of elements less than given number\n";
+    cout<<"order_of_key returns number of elements less than given number\n"; // for less<int>
+    // for greater<int>  it works number of elements greater than given number
     cout<<x.order_of_key(-5)<<endl;  
     cout<<x.order_of_key(1)<<endl;   
     cout<<x.order_of_key(3)<<endl;  

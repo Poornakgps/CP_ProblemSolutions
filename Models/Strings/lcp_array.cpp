@@ -20,7 +20,8 @@ int n, sa[N], rk[N << 1], old_rk[N << 1], old_sa[N], cnt[N];
 void get_lcp()
 {
     int k = 0;
-
+   //  int n = s.size();
+   //  vector<int> rank(n, 0);
     for (int i = 1; i <= n; i++)
         rk[sa[i]] = i;
 
