@@ -63,6 +63,7 @@ void get_factors(vector<ll> &v, ll n){
         }   
     }
 }
+
 void primeFactors(ll n) { 
     map<ll,ll> mp;
     while (n % 2 == 0) { 

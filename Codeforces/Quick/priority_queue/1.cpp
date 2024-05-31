@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
+ 
 using namespace std;
+ 
 #define ss second
 #define ff first
 #define pb push_back
@@ -18,80 +20,54 @@ typedef long long ll;
 #define endl() cout << endl
 #define mod_10 1000000007
 #define mod_9 998244353
+#define MAXN 100005
 #define lmt 1000000000000000000
 #define __builtin_popcount(x) count_ones(x)
 #define Yes() cout << "YES\n"
 #define No() cout << "NO\n"
-#define  MAXN 200005
 
 /***************************************C-H-A-O-S**************************************/
-vector<ll> adj[MAXN];
-ll depth[MAXN], parent[MAXN];
-ll a, b, mx_depth, n;
 
-void dfs(ll node, ll par = 0){
+// https://codeforces.com/contest/1974/problem/G
+void solve() {
 
-    depth[node] = depth[par] + 1;
-    mx_depth = max(mx_depth, depth[node]);
-    parent[node] = par;
-
-    for(auto child: adj[node]){
-        if(child==par) continue;
-        dfs(child, node);
-    }
-}
-
-vector<ll> shortest_path(){
-
-    vector<ll> path;
-    path.pb(b);
-    while(a!=b){
-        b = parent[b];
-        path.pb(b);
-    }
-    return path;
-}
-
-void solve(){
-
-
-    cin >> n;
-
-    cin >> a >> b;
-
-    for(int i=1; i<=n; i++){
-        adj[i].clear();
-    }
-    depth[0] = -1;
-    for(int i=0; i<n-1; i++){
-        ll u, v;
-        cin >> u >> v;
-        adj[u].pb(v);
-        adj[v].pb(u);
-    }
-    mx_depth = -1;
-    dfs(a);
-    if(a==b){
-        cout<< 2*(n-1) - mx_depth<<endl;
-        return;
-    }
     
-    vector<ll> path = shortest_path();
-    ll sz = path.size();
-    reverse(path.begin(), path.end());
-    ll x = path[(sz-1)/2];
-    mx_depth = -1;
-    dfs(x);
-    cout<<2*(n-1) - mx_depth + (sz-1-(sz-1)/2)<<endl;
+    int m, x;
+    cin >> m >> x;
+    vector<int> c(m);
+        
+    fill(c);
+    
+    int budget = 0;
+    priority_queue<int> Q;
+        
+    for (int i = 0; i < m; ++i) {
+        if (budget >= c[i]) {
+            Q.push(c[i]);
+            budget -= c[i];
+        } else if (!Q.empty() && Q.top() > c[i]) {
+            budget += Q.top() - c[i];
+            Q.pop();
+            Q.push(c[i]);
+        }
+        budget += x;
+    }
+        
+    cout << Q.size() << endl;
+    
+
 }
 
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    ll t=1;
+    
+    int t;
     cin >> t;
+    
     while (t--) {
         solve();
     }
+    
     return 0;
 }
