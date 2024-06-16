@@ -198,6 +198,13 @@ int countSetBits(int n)
     return count;
 }
 
+int last_one(int n){
+    return log2(n & -n);
+}
+
+int first_one(int n){
+    return log2(n);
+}
 /*******************************GRAPH****************************************/
 class Graph{
  
