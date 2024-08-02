@@ -27,6 +27,7 @@ const int N = 4000001;
 
 ll t[N+1]={}, c[N+1]={}, o[N+1]={};
 string s;
+
 void build(int ind, int l, int r){
 
     if(r-l<2){

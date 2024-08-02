@@ -209,23 +209,34 @@ int first_one(int n){
 class Graph{
  
     public:
-        ll n,ans=1,fx[100001], siz[100001];
-        map<ll, vector<ll>> comp;
+        ll n,ans=1,fx[200001], siz[200001];
+        vector<vector<ll>> comp;
         vector<vector<ll>> adj;
         vector<ll> cycle_lengths;
         vector<ll> vis;
         vector<ll> color;
+        int timer;
+        map<pii, int> is_bridge;
+        vector<int> tin, low;
+
         Graph(ll n){
             this->n=n;
             adj.resize(n + 1);
-            vis.resize(n+1);
-            vis.assign(n+1,0);
-            color.resize(n+1,0);
+            comp.resize(n + 1);
+            vis.resize(n + 1);
+            vis.assign(n + 1,0);
+            color.resize(n + 1,0);
+            is_bridge.clear();
+            tin.assign(n + 1,0);
+            low.assign(n + 1,0);
             for(int i=1; i<=n; i++){
                 fx[i]=i;            // dsu
                 siz[i]=1;
                 comp[i].pb(i);
             }
+            timer = 0;
+            find_bridges();
+
         }
         void add_directed_edge(ll u, ll v){
  
@@ -233,7 +244,6 @@ class Graph{
         }
  
         void print_adjlist(){
- 
             for(auto it: adj){
                 for(auto it1: it){
                     cout<<it1<<" ";
@@ -241,13 +251,150 @@ class Graph{
                 cout<<endl;
             }
         }
+
+        void find_bridges() {  // O(n+m)
+            vis.assign(n, false);
+            tin.assign(n, -1);
+            low.assign(n, -1);
+            for (int i = 0; i < n; ++i) {
+                if (!vis[i])
+                    dfs_for_bridge(i);
+            }
+        }
+
+        void find_bridges_online() {
+            vector<int> par, dsu_2ecc, dsu_cc, dsu_cc_size;
+            int bridges;
+            int lca_iteration;
+            vector<int> last_visit;
+
+            // Initialization
+            auto init = [&](int n) {
+                par.resize(n);
+                dsu_2ecc.resize(n);
+                dsu_cc.resize(n);
+                dsu_cc_size.resize(n);
+                lca_iteration = 0;
+                last_visit.assign(n, 0);
+                for (int i = 0; i < n; ++i) {
+                    dsu_2ecc[i] = i;
+                    dsu_cc[i] = i;
+                    dsu_cc_size[i] = 1;
+                    par[i] = -1;
+                }
+                bridges = 0;
+            };
+
+            // Find 2-edge-connected component
+            auto find_2ecc = [&](int v) -> int {
+                if (v == -1)
+                    return -1;
+                return dsu_2ecc[v] == v ? v : dsu_2ecc[v] = find_2ecc(dsu_2ecc[v]);
+            };
+
+            // Find connected component
+            auto find_cc = [&](int v) -> int {
+                v = find_2ecc(v);
+                return dsu_cc[v] == v ? v : dsu_cc[v] = find_cc(dsu_cc[v]);
+            };
+
+            // Make root
+            auto make_root = [&](int v) {
+                int root = v;
+                int child = -1;
+                while (v != -1) {
+                    int p = find_2ecc(par[v]);
+                    par[v] = child;
+                    dsu_cc[v] = root;
+                    child = v;
+                    v = p;
+                }
+                dsu_cc_size[root] = dsu_cc_size[child];
+            };
+
+            // Merge path
+            auto merge_path = [&](int a, int b) {
+                ++lca_iteration;
+                vector<int> path_a, path_b;
+                int lca = -1;
+                while (lca == -1) {
+                    if (a != -1) {
+                        a = find_2ecc(a);
+                        path_a.push_back(a);
+                        if (last_visit[a] == lca_iteration) {
+                            lca = a;
+                            break;
+                        }
+                        last_visit[a] = lca_iteration;
+                        a = par[a];
+                    }
+                    if (b != -1) {
+                        b = find_2ecc(b);
+                        path_b.push_back(b);
+                        if (last_visit[b] == lca_iteration) {
+                            lca = b;
+                            break;
+                        }
+                        last_visit[b] = lca_iteration;
+                        b = par[b];
+                    }
+                }
+
+                for (int v : path_a) {
+                    dsu_2ecc[v] = lca;
+                    if (v == lca)
+                        break;
+                    --bridges;
+                }
+                for (int v : path_b) {
+                    dsu_2ecc[v] = lca;
+                    if (v == lca)
+                        break;
+                    --bridges;
+                }
+            };
+
+            // Add edge
+            auto add_edge = [&](int a, int b) {
+                a = find_2ecc(a);
+                b = find_2ecc(b);
+                if (a == b)
+                    return;
+
+                int ca = find_cc(a);
+                int cb = find_cc(b);
+
+                if (ca != cb) {
+                    ++bridges;
+                    if (dsu_cc_size[ca] > dsu_cc_size[cb]) {
+                        std::swap(a, b);
+                        std::swap(ca, cb);
+                    }
+                    make_root(a);
+                    par[a] = dsu_cc[a] = b;
+                    dsu_cc_size[cb] += dsu_cc_size[a];
+                } else {
+                    merge_path(a, b);
+                }
+            };
+
+            // Test example
+            init(5);  // Initialize with 5 nodes
+
+            add_edge(0, 1);
+            add_edge(1, 2);
+            add_edge(1, 3);
+            add_edge(3, 4);
+
+            cout << "Number of bridges: " << bridges << endl;
+        }
  
         void find_cycle_lengths(){
             for(int i=1; i<=n; i++){
                 if(vis[i])
                     continue;      
                 ll length=0;
-                dfs(i,length);
+                dfs_cycle_length(i,length);
             }
         }
  
@@ -278,10 +425,11 @@ class Graph{
                 comp.erase(x);
             }
         }
+
         void find_cycle_directed_graph(){
             for(int i=1; i<=n; i++){
                 if(color[i]==0){
-                    if(dfs(i, -1, adj, color)){
+                    if(dfs(i, -1, color)){
                         cout<<"Cycle found\n";
                         return;
                     }
@@ -291,8 +439,7 @@ class Graph{
         }
  
     private:
-        void dfs(ll node, ll &length){
-            
+        void dfs_cycle_length(ll node, ll &length){
             if(vis[node]) return;
             vis[node]=1;
             length++;     
@@ -300,21 +447,41 @@ class Graph{
                 dfs(it, length);
             }
         }
-        bool dfs(int v, int p, vector<ll> g[], vector<ll> &color){
+        bool dfs(int v, int p, vector<ll> &color){
             color[v] = 1; // GREY
             bool ans=false;
-            for(int w : g[v]){
+            for(int w : adj[v]){
                 if(color[w] == 1){
                     return true;
                 // you found a cycle, it's easy to recover it now.
                 }
-                if(color[w] == 0) ans = dfs(w, v, g, color);
+                if(color[w] == 0) ans = dfs(w, v, color);
                 if(ans) return true;
             }
             color[v] = 2; // BLACK
             return ans;
         }
+        void dfs_for_bridge(int v, int p = -1) {
+            vis[v] = true;
+            tin[v] = low[v] = timer++;
+            bool parent_skipped = false;
+            for (int to : adj[v]) {
+                if (to == p && !parent_skipped) {
+                    parent_skipped = true;
+                    continue;
+                }
+                if (vis[to]) {
+                    low[v] = min(low[v], tin[to]);
+                } else {
+                    dfs(to, v);
+                    low[v] = min(low[v], low[to]);
+                    if (low[to] > tin[v])
+                        is_bridge[{v, to}] = 1, is_bridge[{to, v}] = 1;
+                }
+            }
+        } 
 };
+
 /*******************************GRAPH****************************************/
 
 /******************************* STL ****************************************/

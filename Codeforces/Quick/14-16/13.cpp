@@ -8,6 +8,7 @@ using namespace std;
 #define all(x) begin(x), end(x)
 #define pii pair<int, int>
 typedef long long ll;
+#define vi vector<ll>
 #define fill(v) for(auto& i: v) cin>>i;
 #define has(c, x) {return c.find(x)!=c.end();}
 #define pr(v) for(auto i: v) cout<<i<<" "; cout<<endl;
@@ -16,6 +17,8 @@ typedef long long ll;
 #define show(x) cout<<#x<<": "<<x<<" ";
 #define rev(v) reverse(v.begin(), v.end())
 #define endl() cout << endl
+#define MIN(v) *min_element(all(v))
+#define MAX(v) *max_element(all(v))
 #define mod_10 1000000007
 #define mod_9 998244353
 #define lmt 1000000000000000000
@@ -23,73 +26,58 @@ typedef long long ll;
 #define Yes() cout << "YES\n"
 #define No() cout << "NO\n"
 #define  MAXN 200005
+#define N_LMT 100001
 
 /***************************************C-H-A-O-S**************************************/
-vector<ll> adj[MAXN];
-ll depth[MAXN], parent[MAXN];
-ll a, b, mx_depth, n;
+// https://codeforces.com/contest/1996/problem/F
+void solve() {
 
-void dfs(ll node, ll par = 0){
+    ll n, k;
+    cin >> n >> k;
 
-    depth[node] = depth[par] + 1;
-    mx_depth = max(mx_depth, depth[node]);
-    parent[node] = par;
-
-    for(auto child: adj[node]){
-        if(child==par) continue;
-        dfs(child, node);
+    vector<pair<ll,ll>> v(n);
+    rep(i, 0, n, 1) {
+        cin >> v[i].ff;
     }
-}
-
-vector<ll> shortest_path(){
-
-    vector<ll> path;
-    path.pb(b);
-    while(a!=b){
-        b = parent[b];
-        path.pb(b);
+    for(auto &i : v){
+        cin>>i.ss;
     }
-    return path;
-}
 
-void solve(){
+    ll l = 0, r = 1e12;
+    ll ans = 0;
+    while(r-l>1){
+        ll m = (l+r)/2;
+        ll cnt = 0;
+        for(auto i: v){
+            if(i.ff>=m)
+                cnt+= (i.ff-m)/i.ss + 1;
+        }
 
-
-    cin >> n;
-
-    cin >> a >> b;
-
-    for(int i=1; i<=n; i++){
-        adj[i].clear();
+        if(cnt>=k){
+            l = m;
+        }else{
+            r = m;
+        }
     }
-    depth[0] = -1;
-    for(int i=0; i<n-1; i++){
-        ll u, v;
-        cin >> u >> v;
-        adj[u].pb(v);
-        adj[v].pb(u);
+
+    for(auto i: v){
+        if(i.ff>=l){
+            ll m = (i.ff-l)/i.ss + 1;
+            ans+= m*i.ff - (m*(m-1)/2)*i.ss;
+            k-=m;
+        }
     }
-    mx_depth = -1;
-    dfs(a);
-    if(a==b){
-        cout<< 2*(n-1) - mx_depth<<endl;
-        return;
-    }
-    
-    vector<ll> path = shortest_path();
-    ll sz = path.size();
-    reverse(path.begin(), path.end());
-    ll x = path[(sz-1)/2];
-    mx_depth = -1;
-    dfs(x);
-    cout<<2*(n-1) - mx_depth + (sz-1-(sz-1)/2)<<endl;
+    k = abs(k);
+    ans -= l*k;
+    cout<<ans<<endl;
 }
 
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    ll t=1;
+    ll t = 1;
     cin >> t;
+    // pre();
     while (t--) {
         solve();
     }
