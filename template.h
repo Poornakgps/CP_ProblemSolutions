@@ -100,6 +100,14 @@ ll binpow(ll a, ll b, ll m = 1e18) {
     }
     return res;
 }
+int mex(vector<ll>& numberArray) {
+    set<ll> sett;
+    for(int i = 0; i < numberArray.size(); i++) 
+        sett.insert(numberArray[i]);
+    for(int i = 0; i < 1000001; i++)
+        if(!sett.count(i)) return i;
+    return -1;
+}
 
 /*******************************NUMBER THEORY****************************************/
 
@@ -213,7 +221,7 @@ class Graph{
         vector<vector<ll>> comp;
         vector<vector<ll>> adj;
         vector<ll> cycle_lengths;
-        vector<ll> vis;
+        vector<ll> vis, side;
         vector<ll> color;
         int timer;
         map<pii, int> is_bridge;
@@ -225,6 +233,7 @@ class Graph{
             comp.resize(n + 1);
             vis.resize(n + 1);
             vis.assign(n + 1,0);
+            side.resize(n + 1,-1);
             color.resize(n + 1,0);
             is_bridge.clear();
             tin.assign(n + 1,0);
@@ -251,7 +260,30 @@ class Graph{
                 cout<<endl;
             }
         }
+        bool is_bipartite(ll n) {
 
+            bool is_bipartite = true;
+            queue<int> q;
+            for (int st = 0; st < n; ++st) {
+                if (side[st] == -1) {
+                    q.push(st);
+                    side[st] = 0;
+                    while (!q.empty()) {
+                        int v = q.front();
+                        q.pop();
+                        for (int u : adj[v]) {
+                            if (side[u] == -1) {
+                                side[u] = side[v] ^ 1;
+                                q.push(u);
+                            } else {
+                                is_bipartite &= side[u] != side[v];
+                            }
+                        }
+                    }
+                }
+            }
+            return is_bipartite;
+        }
         void find_bridges() {  // O(n+m)
             vis.assign(n, false);
             tin.assign(n, -1);

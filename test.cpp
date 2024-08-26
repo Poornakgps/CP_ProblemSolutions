@@ -25,106 +25,92 @@ typedef long long ll;
 #define __builtin_popcount(x) count_ones(x)
 #define Yes() cout << "YES\n"
 #define No() cout << "NO\n"
-#define  MAXN 200005
+#define  MAXN 300005
 #define N_LMT 100001
 
 /***************************************C-H-A-O-S**************************************/
 
-vector<ll> adj[10005];
-vector<int> side(10005, -1);
-bool is_bipartite(ll n) {
 
-    bool is_bipartite = true;
-    queue<int> q;
-    for (int st = 0; st < n; ++st) {
-        if (side[st] == -1) {
-            q.push(st);
-            side[st] = 0;
-            while (!q.empty()) {
-                int v = q.front();
-                q.pop();
-                for (int u : adj[v]) {
-                    if (side[u] == -1) {
-                        side[u] = side[v] ^ 1;
-                        q.push(u);
-                    } else {
-                        is_bipartite &= side[u] != side[v];
-                    }
-                }
-            }
-        }
+pair<ll,ll> hsh[MAXN];
+void pre(){
+    hsh[0] = {1,1};
+    for(int i=1; i<67000; i++){
+        hsh[i].ff = (hsh[i-1].ff*31)%mod_10;
+        hsh[i].ss = (hsh[i-1].ss*29)%mod_9;
     }
-    return is_bipartite;
 }
+
+vector<ll> adj[MAXN];
+bool vis[MAXN];
+vector< pair<ll,ll> >  store(MAXN);
+
+pair<ll,ll> dfs_get_hsh(ll node, ll parent = 1, ll depth = 1){
+
+    pair<ll,ll> node_hsh = {(hsh[depth].ff)%mod_10 , (hsh[depth].ss)%mod_9};
+    pair<ll,ll> child_hsh = {hsh[depth+1].ff,hsh[depth+1].ss};
+    for(auto child: adj[node]){
+        if(child == parent) continue;
+        child_hsh = {(dfs_get_hsh(child, node, depth+1).ff + child_hsh.ff)%mod_10, (dfs_get_hsh(child, node, depth+1).ss + child_hsh.ss)%mod_9};
+    }
+    // cout<<node<<" "<<child_hsh.ff<<" "<<child_hsh.ss<<endl;
+    node_hsh = {(node*(child_hsh.ff))%mod_10, (node*(child_hsh.ss))%mod_9};
+
+    store[node] = {parent, depth};
+    // cout<<parent<<" "<<depth<<" "<<node<<" "<<node_hsh.ff<<" "<<node_hsh.ss<<endl;
+    return node_hsh;   // return hsh of subtree rooted at node
+}
+
 void solve() {
 
-    ll n, m;
-    cin >> n >> m;
-
-    for(int i=1; i<=n; i++) {
+    ll n, q;
+    cin >> n >> q;
+    vi a(n+1);
+    adj[1].clear();
+   store[1] = {0,0};
+    for(int i=2; i<=n; i++){
+        cin >> a[i];
         adj[i].clear();
-        side[i] = -1;
+        adj[a[i]].pb(i);
+        adj[i].pb(a[i]);
+        store[i] = {0, 0};
     }
-    for(int i=0; i<m; i++) {
-        ll u, v;
-        cin >> u >> v;
-        adj[u].pb(v);
-        adj[v].pb(u);
+    pair<ll,ll> req_hsh = dfs_get_hsh(1);
+
+    vi permutation(n+1);
+    for(int i=1; i<=n; i++){
+        cin >> permutation[i];
+    }
+    pair<ll,ll> curr_hsh = {0,0};
+
+    for(int i=1; i<=n; i++){
+        // cout<<store[permutation[i]].ff<<" "<<store[permutation[i]].ss<<" "<<permutation[i]<<" "<<<<endl;
+        if(permutation[i] == 1) continue;
+        curr_hsh = {(curr_hsh.ff + (hsh[store[permutation[i]].ss].ff*store[permutation[i]].ff)%mod_10 )%mod_10, (curr_hsh.ss + (hsh[store[permutation[i]].ss].ss*store[permutation[i]].ff)%mod_9 )%mod_9 };
     } 
+    cout<<curr_hsh.ff<<" "<<curr_hsh.ss<<endl;
+    cout<<req_hsh.ff<<" "<<req_hsh.ss<<endl;
+    cout<< (curr_hsh == req_hsh ? "YES" : "NO") << endl;
+    
+    
+    // while(q--){
+    //     ll x, y;
+    //     cin >> x >> y;
 
-    if(!is_bipartite(n)){
-        cout<<"Alice\n";
-        cout.flush();
-        for(int i=1; i<=n; i++){
-            ll a, b;
-            cout<<1<<" "<<2<<endl;
-            cout.flush();
-            cin>>a>>b;
-        }
-    }
-    else{
-        deque<ll> ev, od;
-        for(int i=1; i<=n; i++){
-            if(side[i]==0) ev.pb(i);
-            else od.pb(i);
-        }
-        cout<<"Bob\n";
-        cout.flush();
-        while(n--){
-            ll a, b;
-            cin>>a>>b;
-            cout.flush();
+    //     swap(adj[x], adj[y]);
 
-            if((a==1 || b==1) && ev.size()){
-                cout<<ev.front()<<" "<<1<<endl;
-                ev.pop_front();
-            }
-            else if((a==2 || b==2) && od.size()){
-                cout<<od.front()<<" "<<2<<endl;
-                od.pop_front();
-            }
-            else{
-                if(ev.size()){
-                    cout<<ev.front()<<" "<< 3 <<endl;
-                    ev.pop_front();
-                }
-                else{
-                    cout<<od.front()<<" "<< 3 <<endl;
-                    od.pop_front();
-                }
-                cout.flush();
-            }
-        }
-    }
-
+        
+    //     curr_hsh = {curr_hsh.ff - p[x]*hshes[x].ff, curr_hsh.ss - p[x]*hshes[x].ss};
+    //     curr_hsh = {curr_hsh.ff + p[y]*hshes[x].ff, curr_hsh.ss + p[y]*hshes[x].ss};
+    // }
+    
 }
 
-int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    ll t = 1;
+int main(){
+    ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+    ll t=1;
     cin >> t;
-    while (t--) {
+    pre();
+    while (t--){
         solve();
     }
     return 0;

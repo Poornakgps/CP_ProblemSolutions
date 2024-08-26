@@ -1,0 +1,1 @@
+{"name":"Local: iterative_dp","url":"d:\\cf_contests\\Concepts\\DP\\Form 1\\iterative_dp.cpp","tests":[{"id":1723526479755,"input":"5 10\n1 1 1 1 1","output":""},{"id":1723526522297,"input":"5 10\n2 2 2 2 5","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Concepts\\DP\\Form 1\\iterative_dp.cpp","group":"local","local":true}

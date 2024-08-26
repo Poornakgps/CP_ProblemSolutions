@@ -1,0 +1,1 @@
+{"name":"Local: min_cuts_for_palidromic_string","url":"d:\\cf_contests\\Concepts\\DP\\Form 2\\min_cuts_for_palidromic_string.cpp","tests":[{"id":1723059944671,"input":"1\n11\nabacacadaca","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Concepts\\DP\\Form 2\\min_cuts_for_palidromic_string.cpp","group":"local","local":true}
