@@ -1,0 +1,1 @@
+{"name":"Local: max_points_passing_same_line","url":"d:\\cf_contests\\Concepts\\greedy\\max_points_passing_same_line.cpp","tests":[{"id":1724956613155,"input":"4\n2 2 \n2 2 \n3 3\n3 3","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Concepts\\greedy\\max_points_passing_same_line.cpp","group":"local","local":true}

@@ -1,8 +1,3 @@
-
-// Write your code here
-
-// you can set your Template at profile settings [https://maang.in/profile/template-code]
-
 #include<bits/stdc++.h>
 
 using namespace std;

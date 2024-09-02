@@ -1,0 +1,1 @@
+{"name":"Local: weighted_job_scheduling","url":"d:\\cf_contests\\Concepts\\DP\\Form 2\\weighted_job_scheduling.cpp","tests":[{"id":1725015014572,"input":"4\n2 4 4\n3 6 6\n6 8 2\n5 7 3","output":"7"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Concepts\\DP\\Form 2\\weighted_job_scheduling.cpp","group":"local","local":true}
