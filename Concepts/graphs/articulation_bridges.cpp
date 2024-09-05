@@ -25,7 +25,7 @@ void dfs(int v, int p){
         }
         else{
             dfs(to, v);
-            low[v] = min(low[v], tin[to]);
+            low[v] = min(low[v], low[to]);
             chnodes.push_back(to);
             if(low[to]>=tin[v]){
                 arc[v] = 1;
