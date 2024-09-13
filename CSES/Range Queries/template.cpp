@@ -1,20 +1,20 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-#define int long long
-#define MAXN 200005
+
+#define MAXN 100005
 
 /***************************************C-H-A-O-S**************************************/
 
-struct node {
+struct data {
     int sum, pref, suff, ans;
 };
 
 int n;
-node t[4*MAXN];
+data t[4*MAXN];
 
-node combine(node l, node r) {
-    node res;
+data combine(data l, data r) {
+    data res;
     res.sum = l.sum + r.sum;
     res.pref = max(l.pref, l.sum + r.pref);
     res.suff = max(r.suff, r.sum + l.suff);
@@ -22,17 +22,16 @@ node combine(node l, node r) {
     return res;
 }
 
-node make_node(int val = 0) {
-    node res;
+data make_data(int val) {
+    data res;
     res.sum = val;
-    int k = 0;
-    res.pref = res.suff = res.ans = max(k, val);
+    res.pref = res.suff = res.ans = max(0, val);
     return res;
 }
 
 void build(int a[], int v, int tl, int tr) {
     if (tl == tr) {
-        t[v] = make_node(a[tl]);
+        t[v] = make_data(a[tl]);
     } else {
         int tm = (tl + tr) / 2;
         build(a, v*2, tl, tm);
@@ -43,7 +42,7 @@ void build(int a[], int v, int tl, int tr) {
 
 void update(int v, int tl, int tr, int pos, int new_val) {
     if (tl == tr) {
-        t[v] = make_node(new_val);
+        t[v] = make_data(new_val);
     } else {
         int tm = (tl + tr) / 2;
         if (pos <= tm)
@@ -54,9 +53,9 @@ void update(int v, int tl, int tr, int pos, int new_val) {
     }
 }
 
-node query(int v, int tl, int tr, int l, int r) {
+data query(int v, int tl, int tr, int l, int r) {
     if (l > r) 
-        return make_node();
+        return make_data(0);
     if (l == tl && r == tr) 
         return t[v];
     int tm = (tl + tr) / 2;
@@ -71,24 +70,24 @@ void solve() {
   
   int arr[n];
 
-  for(int i=0; i<n; i++) cin>>arr[i];
+  rep(i,0,n,1) cin>>arr[i];
 
   build(arr, 1, 0, n-1);
 
   while(q--){
-    int a, b, c;
-
-    cin>>b>>c;
-
-    update(1, 0, n-1, b-1, c);
-
-    cout<<query(1, 0, n-1, 0, n-1).ans<<endl;
-    
+    ll a, b, c;
+    cin>>a>>b>>c;
+    if(a == 1){
+      update(1, 0, n-1, b-1, c);
+    }
+    else{
+      cout<<range_gcd(1, 0, n-1, b-1, c-1)<<endl;
+    }
   }
 
 }
 
-int32_t main() {
+int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t = 1;

@@ -39,7 +39,7 @@ int mex(vector<ll>& numberArray) {  // munda mex
 }
 ll gcd(ll a, ll b){ if(b==0) return a; else return gcd(b,a%b); }
 
-ll binpow(ll a, ll b, ll m ) {
+ll binpow(ll a, ll b, ll m = 1e18) {
     a %= m;
     ll res = 1;
     while (b > 0) {
@@ -48,7 +48,7 @@ ll binpow(ll a, ll b, ll m ) {
         a = a * a % m;
         b >>= 1;
     }
-    return res%m;
+    return res;
 }
 void add_m(ll &a, ll b) {
     a += b;
@@ -58,71 +58,68 @@ ll mul_m(ll a, ll b, ll m) {
     return (a * 1LL * b) % m;
 }
 
-int dp[3005][3005];
-string s, t;
-int n, m;
-
-int lcs(int i, int j){
-    if(i==n || j==m){
-        return 0;
-    }
-    // cout<<i<<" "<<j<<endl;
-    if(dp[i][j]!=-1){
-        return dp[i][j];
-    }
-
-    int ans = 0;
-
-    if(s[i]==t[j]){
-        ans = 1 + lcs(i+1, j+1);
-    }
-    else{
-        ans = max(lcs(i+1, j), lcs(i, j+1));
-    }
-    return dp[i][j] = ans;
-}
-
-vector<char> solution;
-
-void generate(int i, int j) {
-    // BaseCase
-    if (i == n || j==m) return;
-
-    // Transition
-    if(s[i]==t[j]){
-        solution.push_back(t[j]);
-        generate(i+1, j+1);
-    }
-    else{
-        int lft = dp[i+1][j];
-        int rgt = dp[i][j+1];
-        if(lft>rgt){
-            generate(i+1, j);
-        }
-        else{
-            generate(i, j+1);
-        }
-    }
-}
 void solve() {
 
-    cin>>s>>t;
-    n = s.size(), m = t.size();
-    memset(dp, -1, sizeof(dp));
-    int lcs_length = lcs(0, 0);
+	int n;
+	cin>>n;
 
-    // cout<<lcs_length<<endl;
+	ll arr[n+2];
+	for(int i=0; i<n; i++){
+		cin>>arr[i];
+	}
 
-    generate(0, 0);
+	stack<ll> st;
 
-    for(auto it: solution){
-        cout<<it;
-    }
+	vector<ll> l(n+1, -1), r(n+1, n);
+
+	for(int i=0; i<n; i++){
+		while(!st.empty() && arr[st.top()] <= arr[i]){
+			st.pop();
+		}
+		if(!st.empty()){
+			l[i] = st.top();
+		}
+		if(st.empty()){
+			st.push(i);
+			continue;
+		}
+		if(arr[st.top()]<=arr[i])
+			st.push(i);
+	}
+	while(!st.empty()){
+		st.pop();
+	}
+	for(int i=n-1; i>=0; i--){
+		while(!st.empty() && arr[st.top()]<=arr[i]){
+			st.pop();
+		}
+
+		if(!st.empty()){
+			r[i] = st.top();
+		}
+		if(st.empty()){
+			st.push(i);
+			continue;
+		}
+		if(arr[st.top()]<=arr[i])
+			st.push(i);
+	}
+	ll a[n+1]={};
+	ll ans = 0;
+	for(int i=0; i<n; i++){
+		// cout<<l[i]<<" "<<r[i]<<" "<<arr[i]<<endl;
+		if(l[i] !=-1 && r[i]!=n){
+			ans += min(arr[l[i]], arr[r[i]]) - arr[i] + a[l[i]];
+			a[i] = ans;
+		}
+	}
+	cout<<ans<<endl;
 }
 
 signed main(){
     ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
     ll t=1;
+    cin >> t;
     while (t--){
         solve();
     }

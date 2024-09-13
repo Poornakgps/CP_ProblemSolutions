@@ -1,0 +1,1 @@
+{"name":"Local: Forest Queries II","url":"d:\\cf_contests\\CSES\\Range Queries\\Forest Queries II.cpp","tests":[{"id":1726253214401,"input":"4 3\n.*..\n*.**\n**..\n****\n2 2 2 3 4\n1 3 3\n2 2 2 3 4","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\CSES\\Range Queries\\Forest Queries II.cpp","group":"local","local":true}

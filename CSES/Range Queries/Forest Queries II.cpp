@@ -102,12 +102,13 @@ void solve() {
 
     while (q--) {
         int type=2;
+        cin>>type;
         if (type == 1) { 
             int x, y;
-            char new_char;
-            cin >> x >> y >> new_char;
+            cin >> x >> y;
             x--; y--; 
-            int new_val = (new_char == '*') ? 1 : 0;
+            int new_val = (a[x][y] == '*') ? 0 : 1;
+            a[x][y] = (a[x][y] == '*') ? '.' : '*';
             update_x(1, 0, n - 1, x, y, new_val);
         } else if (type == 2) { 
             int x1, y1, x2, y2;

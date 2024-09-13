@@ -1,13 +1,14 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-#define int long long
-#define MAXN 200005
 
+#define MAXN 200005
+#define ll long long
+#define int long long
 /***************************************C-H-A-O-S**************************************/
 
 struct node {
-    int sum, pref, suff, ans;
+    int sum;
 };
 
 int n;
@@ -16,17 +17,12 @@ node t[4*MAXN];
 node combine(node l, node r) {
     node res;
     res.sum = l.sum + r.sum;
-    res.pref = max(l.pref, l.sum + r.pref);
-    res.suff = max(r.suff, r.sum + l.suff);
-    res.ans = max(max(l.ans, r.ans), l.suff + r.pref);
     return res;
 }
 
-node make_node(int val = 0) {
+node make_node(int val) {
     node res;
     res.sum = val;
-    int k = 0;
-    res.pref = res.suff = res.ans = max(k, val);
     return res;
 }
 
@@ -56,7 +52,7 @@ void update(int v, int tl, int tr, int pos, int new_val) {
 
 node query(int v, int tl, int tr, int l, int r) {
     if (l > r) 
-        return make_node();
+        return make_node(0);
     if (l == tl && r == tr) 
         return t[v];
     int tm = (tl + tr) / 2;
@@ -76,14 +72,15 @@ void solve() {
   build(arr, 1, 0, n-1);
 
   while(q--){
-    int a, b, c;
-
+    ll a, b, c;
+    a=2;
     cin>>b>>c;
-
-    update(1, 0, n-1, b-1, c);
-
-    cout<<query(1, 0, n-1, 0, n-1).ans<<endl;
-    
+    if(a == 1){
+      update(1, 0, n-1, b-1, c);
+    }
+    else{
+      cout<<query(1, 0, n-1, b-1, c-1).sum<<endl;
+    }
   }
 
 }
