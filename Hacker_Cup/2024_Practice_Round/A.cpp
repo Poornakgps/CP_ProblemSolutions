@@ -27,7 +27,8 @@ typedef long long ll;
 #define No() cout << "NO\n"
 #define  MAXN 300005
 #define N_LMT 100001
-
+#define janu main
+ 
 /***************************************C-H-A-O-S**************************************/
 int mex(vector<ll>& numberArray) {  // munda mex
     set<ll> sett;
@@ -37,18 +38,59 @@ int mex(vector<ll>& numberArray) {  // munda mex
         if(!sett.count(i)) return i;
     return -1;
 }
-
-void solve() {
-
-
-}
-
-int main(){
-    ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
-    ll t=1;
-    cin >> t;
-    while (t--){
-        solve();
+ll gcd(ll a, ll b){ if(b==0) return a; else return gcd(b,a%b); }
+ 
+ll binpow(ll a, ll b, ll m ) {
+    a %= m;
+    ll res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * a % m;
+        a = a * a % m;
+        b >>= 1;
     }
+    return res%m;
+}
+void add_m(ll &a, ll b) {
+    a += b;
+}
+ 
+ll mul_m(ll a, ll b, ll m) {
+    return (a * 1LL * b) % m;
+}
+ 
+string solve() {
+
+    ll n, k;
+    cin>>n>>k;
+
+    vector<ll> a(n);
+    fill(a);
+
+    sort(all(a));
+    if(n==1){
+        return a[0]<=k ? "YES" : "NO";
+    }
+
+    ll mn = a[0]*2*(n-1) - a[0];
+    if(mn>k){
+        return "NO";
+    }
+    return "YES";
+    
+}
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+ 
+    ll t = 1;
+    cin >> t;
+    int i=1;
+    while (t--) {
+        cout<<"Case #"<<i<< ": "<< solve()<<endl;
+        i++;
+    }
+ 
     return 0;
 }

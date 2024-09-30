@@ -27,6 +27,8 @@ typedef long long ll;
 #define No() cout << "NO\n"
 #define  MAXN 300005
 #define N_LMT 100001
+#define janu main
+#define int long long
 
 /***************************************C-H-A-O-S**************************************/
 int mex(vector<ll>& numberArray) {  // munda mex
@@ -58,72 +60,146 @@ ll mul_m(ll a, ll b, ll m) {
     return (a * 1LL * b) % m;
 }
 
-int dp[3005][3005];
-string s, t;
-int n, m;
+int max_profit(vector<int>& arr, int x, int y, int z) {
+    int n = arr.size();
 
-int lcs(int i, int j){
-    if(i==n || j==m){
-        return 0;
-    }
-    // cout<<i<<" "<<j<<endl;
-    if(dp[i][j]!=-1){
-        return dp[i][j];
-    }
+    // Initialize a 4D dp array with -inf
+    vector<vector<vector<vector<int>>>> dp(n + 1, vector<vector<vector<int>>>(x + 1, vector<vector<int>>(y + 1, vector<int>(z + 1, INT_MIN))));
 
-    int ans = 0;
+    // Base case: no elements considered, no subarrays taken
+    dp[0][0][0][0] = 0;
 
-    if(s[i]==t[j]){
-        ans = 1 + lcs(i+1, j+1);
-    }
-    else{
-        ans = max(lcs(i+1, j), lcs(i, j+1));
-    }
-    return dp[i][j] = ans;
-}
+    for (int i = 1; i <= n; ++i) {
+        for (int j1 = 0; j1 <= x; ++j1) {
+            for (int j2 = 0; j2 <= y; ++j2) {
+                for (int j3 = 0; j3 <= z; ++j3) {
+                    // Option 1: Don't pick any subarray ending at i-1
+                    dp[i][j1][j2][j3] = dp[i - 1][j1][j2][j3];
 
-vector<char> solution;
+                    // Option 2: Pick a 1-sized subarray ending at i-1
+                    if (j1 > 0) {
+                        dp[i][j1][j2][j3] = max(dp[i][j1][j2][j3], dp[i - 1][j1 - 1][j2][j3] + arr[i - 1]);
+                    }
 
-void generate(int i, int j) {
-    // BaseCase
-    if (i == n || j==m) return;
+                    // Option 3: Pick a 2-sized subarray ending at i-1
+                    if (i >= 2 && j2 > 0) {
+                        dp[i][j1][j2][j3] = max(dp[i][j1][j2][j3], dp[i - 2][j1][j2 - 1][j3] + arr[i - 2] + arr[i - 1]);
+                    }
 
-    // Transition
-    if(s[i]==t[j]){
-        solution.push_back(t[j]);
-        generate(i+1, j+1);
-    }
-    else{
-        int lft = dp[i+1][j];
-        int rgt = dp[i][j+1];
-        if(lft>rgt){
-            generate(i+1, j);
-        }
-        else{
-            generate(i, j+1);
+                    // Option 4: Pick a 3-sized subarray ending at i-1
+                    if (i >= 3 && j3 > 0) {
+                        dp[i][j1][j2][j3] = max(dp[i][j1][j2][j3], dp[i - 3][j1][j2][j3 - 1] + arr[i - 3] + arr[i - 2] + arr[i - 1]);
+                    }
+                }
+            }
         }
     }
-}
-void solve() {
 
-    cin>>s>>t;
-    n = s.size(), m = t.size();
-    memset(dp, -1, sizeof(dp));
-    int lcs_length = lcs(0, 0);
-
-    // cout<<lcs_length<<endl;
-
-    generate(0, 0);
-
-    for(auto it: solution){
-        cout<<it;
+    int max_profit = 0;
+    for (int j1 = 0; j1 <= x; ++j1) {
+        for (int j2 = 0; j2 <= y; ++j2) {
+            for (int j3 = 0; j3 <= z; ++j3) {
+                max_profit = max(max_profit, dp[n][j1][j2][j3]);
+            }
+        }
     }
+
+    return max_profit;
 }
 
-signed main(){
+void solve(){
+
+    int n;
+    cin>>n;
+
+    for(int i=1; i<=n; i++){
+        cin>>a[i];
+    }
+
+    for(int i=1; i<=n; i++){
+        depth[i] = 1e9;
+        sz[i]=0;
+        adj[i].clear();
+        parent[i] = 0;
+        child_sum[i]=0;
+    }
+    for(int i=2; i<=n; i++){
+        ll x;
+        cin>>x;
+        adj[x].pb(i);
+        adj[i].pb(x);
+    }
+    ll ans = 0;
+
+    dfs(1); 
+
+    deque<int> que;
+    que.pb(1);
+
+    while(que.size()){
+        auto i = que.front();
+        que.pop_front();
+        ll sum  = 0, freq = 1e9, chosen = -1;
+        if(child_sum[i]<a[i] && (adj[i].size()>1 || i==1)){
+            for(auto it: adj[i]){
+                if(it!=parent[i]){
+                    cout<<depth[it]<<endl;
+                    if(freq>sz[it]-1){
+                        chosen = it;
+                        freq = sz[it]-1;
+                        sum = child_sum[it];
+                    }
+                    else if(freq==sz[it]-1){
+                        if(sum<child_sum[it]){
+                            chosen = it;
+                        }
+                        sum = max(sum, child_sum[it]);
+                    }
+                }
+            }
+            // cout<<i<<endl;
+            if(freq==1e9){
+                freq=0;
+            }
+            ans+= freq*(a[i]) - sum + (a[i] - child_sum[i]);
+        }
+        for(auto it: adj[i]){
+            if(it!=parent[i] && it!=chosen){
+                que.pb(it);
+            }
+        }
+    }
+    cout<<ans<<endl;
+}
+
+
+signed janu(){
     ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
     ll t=1;
+    cin>>t;
     while (t--){
         solve();
     }
+}
+
+
+void solve() {
+
+    int n, d, k;
+    cin>>n>>d>>k;
+
+    vector<ll> a(n+2, 0);
+
+    for(int i=0; i<k; i++){
+        ll l, r;
+        cin>>l>>r;
+        a[l]++;
+        a[r+1]--;
+    }
+
+    for(int i=0; i<=n; i++){
+        a[i+1] = a[i+1] + a[i];
+    }
+    
+
 }

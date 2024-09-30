@@ -59,62 +59,39 @@ ll binpow(ll a, ll b, ll m ) {
     }
     return res%m;
 }
-ll parent[200100], sz[200100] ;
-
-int get_parent(int child){
-
-    if(parent[child] == child) return child;
-
-    return parent[child] = get_parent(parent[child]);
-}
-
-void merge(int A, int B){
-
-    A = get_parent(A);
-    B = get_parent(B);
-    if(A == B)
-        return;
-
-    if(sz[A] > sz[B]) swap(A, B);
-    sz[B] = sz[B] + sz[A];
-    parent[A] = B;
-}
 
 void solve() {
- 
-    ll n, m;
-    cin>>n>>m;
-    for(int i=1; i<=n; i++){
-        parent[i] = i;
-        sz[i] = 1;
-    }
- 
-    ll ap[n+1][11]={};
-    for(int i=0; i<m; i++){
-        ll ai, di, ki;
-        cin >> ai >> di >> ki;
-        if(ki==0) continue;
-        ap[ai][di]++;
-        ap[ai + ki*di ][di]--;
-        
-    }
 
-    for(int i=1; i<=n; i++){
-        for(int j=1; j<=10; j++){
-            if (i-j < 1) continue;
-            
-            if( ap[i-j][j] ){
-                merge(get_parent(i-j), get_parent(i));
-                ap[i][j] += ap[i-j][j];
+    ll b, c, d;
+    cin>>b>>c>>d;
+    ll a = 0;
+
+    for(int i=0; i<=60; i++){
+
+        ll val = pow(2, i);
+        if( (val & c) && (val & d)){
+            if(val&b){
+                continue;
+            }
+            cout<<-1<<endl;
+            return;
+        }
+        else if( (val&c) && !(val & d) ){    
+            if(val&b){
+                a+= (val);
             }
         }
+        else if( !(val&c) && (val&d) ){
+            a+= (val);
+        }
+        else{
+            if(val&b){
+                cout<<-1<<endl;
+                return;
+            } 
+        }
     }
-
-    set<int> st;
-    for(int i=1; i<=n; i++){
-        st.insert(get_parent(i));
-    }
-    cout<<st.size()<<endl;
+    cout<<a<<endl;
 }
 
 signed main() {

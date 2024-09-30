@@ -59,62 +59,42 @@ ll binpow(ll a, ll b, ll m ) {
     }
     return res%m;
 }
-ll parent[200100], sz[200100] ;
+vector<ll> fac[100000];
+void pre(){
 
-int get_parent(int child){
-
-    if(parent[child] == child) return child;
-
-    return parent[child] = get_parent(parent[child]);
+    for(int i=1; i<=100000; i++){
+        for(int j=i; j<=100000; j+=i){
+            fac[j].pb(i);
+        }
+    }
 }
-
-void merge(int A, int B){
-
-    A = get_parent(A);
-    B = get_parent(B);
-    if(A == B)
-        return;
-
-    if(sz[A] > sz[B]) swap(A, B);
-    sz[B] = sz[B] + sz[A];
-    parent[A] = B;
+ll number_of_perfect_squares(ll n) {
+    return (ll)sqrt(n); 
 }
 
 void solve() {
- 
-    ll n, m;
-    cin>>n>>m;
-    for(int i=1; i<=n; i++){
-        parent[i] = i;
-        sz[i] = 1;
-    }
- 
-    ll ap[n+1][11]={};
-    for(int i=0; i<m; i++){
-        ll ai, di, ki;
-        cin >> ai >> di >> ki;
-        if(ki==0) continue;
-        ap[ai][di]++;
-        ap[ai + ki*di ][di]--;
-        
-    }
 
-    for(int i=1; i<=n; i++){
-        for(int j=1; j<=10; j++){
-            if (i-j < 1) continue;
+    ll k;
+    cin>>k;
+
+    ll l = 0, h = 2 * k, ans = 0;
+        
+    while (l <= h) {
+        ll mid = l+ (h - l)/2;
+        ll perfect_squares = number_of_perfect_squares(mid);
+         ll condition = mid - perfect_squares;
             
-            if( ap[i-j][j] ){
-                merge(get_parent(i-j), get_parent(i));
-                ap[i][j] += ap[i-j][j];
-            }
+        if (condition == k) {
+            ans = mid; 
+            h = mid - 1;
+        } else if (condition < k) {
+            l = mid + 1;
+        } else {
+            h = mid - 1;
         }
     }
-
-    set<int> st;
-    for(int i=1; i<=n; i++){
-        st.insert(get_parent(i));
-    }
-    cout<<st.size()<<endl;
+        
+    cout << ans << endl;
 }
 
 signed main() {

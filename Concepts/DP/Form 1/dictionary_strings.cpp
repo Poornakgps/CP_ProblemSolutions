@@ -7,6 +7,7 @@ string text;
 map<string, bool> dictionary;
 
 int dp[305];
+bool dp2[305];
 
 bool rec(int i){
 
@@ -30,6 +31,42 @@ bool rec(int i){
     return dp[i]= ans;
 }
 
+void iterative(){
+
+    cin >> dictionary_length;
+    cin >> text;
+
+    for(int i = 0; i < dictionary_length; i++){
+        string word;
+        cin >> word;
+        dictionary[word] = true;
+    }
+
+    int n = text.length();
+    memset(dp2, false, sizeof(dp2));
+
+    dp[n] = true;
+
+    for(int i=n-1; i>=0; i--){
+        string so_far="";
+        for(int j=i; j<n; j++){
+            so_far += text[j];
+
+            if(dictionary[so_far]){
+                dp2[i] = dp2[i] | dp1[i+1];
+            }
+        }
+    }
+
+    if(dp2[0]){
+        cout<<"Yes\n";
+    }
+    else{
+        cout<<"No\n";
+    }
+
+}
+
 void solve(){
 
     cin >> dictionary_length;
@@ -50,8 +87,6 @@ void solve(){
     else{
         cout << "NO" << endl;
     }
-
-
 }
 
 

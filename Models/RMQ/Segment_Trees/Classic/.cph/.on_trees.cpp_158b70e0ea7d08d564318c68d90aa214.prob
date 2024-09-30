@@ -1,0 +1,1 @@
+{"name":"Local: on_trees","url":"d:\\cf_contests\\Models\\RMQ\\Segment_Trees\\Classic\\on_trees.cpp","tests":[{"id":1726295676837,"input":"3\n1 1\n3\n1 1 2 1\n2 1\n2 2\n","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Models\\RMQ\\Segment_Trees\\Classic\\on_trees.cpp","group":"local","local":true}

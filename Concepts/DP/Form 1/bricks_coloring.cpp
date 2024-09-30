@@ -37,6 +37,28 @@ int rec(int i, int j){
     return dp[i][j] = ans;
 }
 
+void iterative(){
+    cin>>n>>m>>k;
+
+    memset(dp, 0, sizeof(dp));
+    dp[n][0]=1;
+
+    for(int i=n-1; i>=0; i--){
+        for(int colors = 0; colors<=k; colors++){
+            if(i==n-1){
+                dp[i][colors] = (colors == k ? 1 : 0);
+                continue;
+            }
+
+            dp[i][colors] = (dp[i][colors] + dp[i+1][colors])%mod;
+            if(colors>0){
+                dp[i][colors] = (dp[i][colors] + (m-1)*dp[i+1][colors-1])%mod;
+            }
+        }
+    }
+    cout<<dp[0][k]<<endl;
+}
+
 void solve(){
     cin >> n >> m >> k;
     

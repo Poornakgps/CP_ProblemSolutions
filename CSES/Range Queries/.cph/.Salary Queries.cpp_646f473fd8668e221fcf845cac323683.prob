@@ -1,0 +1,1 @@
+{"name":"Local: Salary Queries","url":"d:\\cf_contests\\CSES\\Range Queries\\Salary Queries.cpp","tests":[{"id":1726256386569,"input":"5 3\n3 7 2 2 5\n? 2 3\n! 3 6\n? 2 3","output":"3\n2"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\CSES\\Range Queries\\Salary Queries.cpp","group":"local","local":true}
