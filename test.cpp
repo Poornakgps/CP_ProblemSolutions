@@ -27,7 +27,7 @@ typedef long long ll;
 #define Yes() cout << "YES\n"
 #define No() cout << "NO\n"
 #define  MAXN 300005
-#define N_LMT 100001
+#define N_LMT 200200
 
 void debug(vi v){
 
@@ -59,62 +59,54 @@ ll binpow(ll a, ll b, ll m ) {
     }
     return res%m;
 }
-ll parent[200100], sz[200100] ;
 
-int get_parent(int child){
-
-    if(parent[child] == child) return child;
-
-    return parent[child] = get_parent(parent[child]);
-}
-
-void merge(int A, int B){
-
-    A = get_parent(A);
-    B = get_parent(B);
-    if(A == B)
-        return;
-
-    if(sz[A] > sz[B]) swap(A, B);
-    sz[B] = sz[B] + sz[A];
-    parent[A] = B;
-}
 
 void solve() {
- 
-    ll n, m;
-    cin>>n>>m;
-    for(int i=1; i<=n; i++){
-        parent[i] = i;
-        sz[i] = 1;
+    
+    ll n,m, q;
+    cin>>n>>m>>q;
+
+    vector<int> a(n), b(m);
+
+    map<int, int> conv;
+    ll cnt = 1;
+    for(auto &i: a){
+        cin>>i;
+        conv[i] = cnt;
+        cnt++;
     }
- 
-    ll ap[n+1][11]={};
+
+    for(auto &i: b){  
+        cin>>i;
+        i = conv[i];
+    }
+    ll hash1 = n*(n+1)/2, hash2=0;
+    
+    map<int, int> first_occ;
+    cnt = 1;
     for(int i=0; i<m; i++){
-        ll ai, di, ki;
-        cin >> ai >> di >> ki;
-        if(ki==0) continue;
-        ap[ai][di]++;
-        ap[ai + ki*di ][di]--;
-        
-    }
-
-    for(int i=1; i<=n; i++){
-        for(int j=1; j<=10; j++){
-            if (i-j < 1) continue;
-            
-            if( ap[i-j][j] ){
-                merge(get_parent(i-j), get_parent(i));
-                ap[i][j] += ap[i-j][j];
-            }
+        if(first_occ[b[i]]){
+            continue;
         }
+        first_occ[b[i]] = i+1;
+        hash2 = b[i]*(cnt);
+        cnt++;
+    }
+    cout<<cnt<<endl;
+    hash1 = cnt*(cnt-1)*(2*cnt-1)/6;
+    bool possible = true;
+    if(hash1!=hash2){
+        possible = false;
     }
 
-    set<int> st;
-    for(int i=1; i<=n; i++){
-        st.insert(get_parent(i));
+
+
+    if(possible){
+        cout<<"YA\n";
     }
-    cout<<st.size()<<endl;
+    else{
+        cout<<"TIDAK\n";
+    }
 }
 
 signed main() {

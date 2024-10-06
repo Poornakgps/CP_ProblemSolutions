@@ -1,0 +1,1 @@
+{"name":"Local: scrambling_string","url":"d:\\cf_contests\\Concepts\\DP\\form_4\\scrambling_string.cpp","tests":[{"id":1728028495578,"input":"3\nabcde caebd\na a\ngreat rgeat\n","output":"No\nYes\nYes\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Concepts\\DP\\form_4\\scrambling_string.cpp","group":"local","local":true}

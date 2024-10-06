@@ -1,0 +1,1 @@
+{"name":"Local: oa","url":"d:\\cf_contests\\oa.cpp","tests":[{"id":1727981171648,"input":"1\n4 7\n1 2 3 4","output":"4"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\oa.cpp","group":"local","local":true}

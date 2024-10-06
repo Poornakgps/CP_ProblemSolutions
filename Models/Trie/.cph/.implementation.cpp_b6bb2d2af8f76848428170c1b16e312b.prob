@@ -1,0 +1,1 @@
+{"name":"Local: implementation","url":"d:\\cf_contests\\Models\\Trie\\implementation.cpp","tests":[{"id":1727970334897,"input":"5\nhand handfd hhhfdldsfkl hell hello\nimp hand very hello hii","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\cf_contests\\Models\\Trie\\implementation.cpp","group":"local","local":true}
