@@ -1,9 +1,5 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/trie_policy.hpp>
-#include <ext/pb_ds/tag_and_trait.hpp>
 using namespace std;
-using namespace __gnu_pbds;
 #define ss second
 #define ff first
 #define pb push_back
@@ -24,7 +20,7 @@ typedef long long ll;
 #define MIN(v) *min_element(all(v))
 #define MAX(v) *max_element(all(v))
 #define testcase_(i, val) cout<<"Case #"<<i<< ": "<< val<<endl;
-#define mod_10 1000000007
+#define mod_10 1000000009
 #define mod_9 998244353
 #define lmt 1000000000000000000
 #define __builtin_popcount(x) count_ones(x)
@@ -63,37 +59,82 @@ ll binpow(ll a, ll b, ll m ) {
     }
     return res%m;
 }
-ll fac[2000001];
 
-ll inv(ll a){ return binpow(a,mod_10-2,mod_10); }
- 
-ll ncr(ll n, ll r){
-    if(n<r || r<0){
-        return 0;
+// https://rng-58.blogspot.com/2017/02/hashing-and-probability-of-collision.html
+
+vector<ll> adj[N_LMT];
+vector<ll> depth(N_LMT, 0), symmetrical(N_LMT, 0), hsh(N_LMT, 0);
+
+ll dfs_depth(int node, int par = 0){
+    depth[node] = 1;
+    ll mx_depth = 0;
+
+    for(auto child: adj[node]){
+        if(child == par) continue;
+
+        mx_depth = max(mx_depth, dfs_depth(child, node));
     }
-    if(r==0){
-        return 1;
+    depth[node] = mx_depth + depth[node];
+    return depth[node];
+}
+
+ll dfs_hash(int node, int par = 0){
+    hsh[node] = 1;
+    map<ll, ll> cnt; // freq of each hash
+    map<ll, ll> mp;
+    vector<ll> od; // odd freq hash if exists
+    for(auto child: adj[node]){
+        if(child == par) continue;
+
+        ll tmp = dfs_hash(child, node);
+
+        hsh[node]  = ((hsh[node])*(depth[node] + tmp)%mod_10)%mod_10;
+        cnt[tmp]++;
+        mp[tmp] = child;
     }
-    ll ans = 1;
-    ans = (ans*fac[n])%mod_10;
-    ans = (ans*inv(fac[r]))%mod_10;
-    ans = (ans*inv(fac[n - r]))%mod_10;
-    return ans%mod_10;
-} 
+    hsh[node] = (hsh[node] * depth[node])%mod_10;
+
+    for(auto it: cnt){
+        if(it.ss & 1) od.pb(mp[it.ff]);
+    }
+
+    if(od.size()>1) symmetrical[node] = 0;
+
+    else if(od.size()==0) symmetrical[node] = 1;
+
+    else{
+        symmetrical[node] = symmetrical[od[0]];
+    }
+    return hsh[node];
+}
 
 void solve() {
+    
+    int n;
+    cin>>n;
 
-    ll a, b;
-    cin >> a >> b;
-    ll n = a+b;
-    ll od = (n+2)/4 , ev = n/4, rem = n/2;
-    ll ans = 0;
-
-    for(int i=0; i<=b/2; i++){
-        ans += (((ncr(od, i)*ncr(ev, i))%mod_10)*ncr(rem, b-2*i))%mod_10;
-        ans = ans%mod_10;
+    for(int i=1; i<=n; i++){
+        adj[i].clear();
+        depth[i] = 0;
+        symmetrical[i] = 0;
     }
-    cout<<ans<<endl;
+
+    for(int i=0; i<n-1; i++){
+        ll u, v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    ll ans = dfs_depth(1);
+    ans = dfs_hash(1);
+
+    if(symmetrical[1]){
+        cout<<"YES\n";
+    }
+    else{
+        cout<<"NO\n";
+    }
 }
 
 signed main() {
@@ -101,10 +142,6 @@ signed main() {
     cin.tie(0);
     cout.tie(0);
     ll t = 1;
-    fac[0]=1;
-    for(ll i=1; i<=2000000; i++){
-        fac[i] = (i*(fac[i-1])) % mod_10;
-    }
     cin >> t;
     int i=1;
     while (t--) {
@@ -113,5 +150,6 @@ signed main() {
         // testcase_(i, solve());
         i++;
     }
+
     return 0;
 }
